@@ -1,43 +1,53 @@
 #include <cstdio>
 #include <iostream>
+#include <vector>
 #include <algorithm>
 using namespace std;
 
-struct Pair
+struct Meeting
 {
     int start;
     int end;
+    Meeting(int s, int e) : start(s), end(e) {};
 };
 
-bool compar(Pair x, Pair y)
+bool compar(const Meeting &a, const Meeting &b)
 {
-    if (x.end == y.end)
-        return x.start < y.start;
-    return x.end < y.end;
+    if (a.end == b.end)
+        return a.start < b.start;
+    return a.end < b.end;
 }
 
 int main()
 {
-    int N;
-    Pair I[100010];
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
-    scanf("%d", &N);
+    int N;
+    cin >> N;
+
+    vector<Meeting> I;
+    I.reserve(N);
+
     for (int i = 0; i < N; i++)
     {
-        scanf("%d %d", &I[i].start, &I[i].end);
+        int s, e;
+        cin >> s >> e;
+        I.emplace_back(s, e);
     }
 
-    sort(I, I + N, compar);
+    sort(I.begin(), I.end(), compar);
 
     int ans = 0;
-    int fend = 0;
-    for (int i = 0; i < N; i++)
+    int last_end = 0;
+    for (const auto &m : I)
     {
-        if(I[i].start >= fend){
+        if (m.start >= last_end)
+        {
             ans++;
-            fend = I[i].end;
+            last_end = m.end;
         }
     }
-    printf("%d", ans);
+    cout << ans;
     return 0;
 }
