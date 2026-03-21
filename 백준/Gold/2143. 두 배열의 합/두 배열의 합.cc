@@ -18,6 +18,8 @@ int main() {
 	cin >> t;
 	
 	cin >> n;
+	nsum.reserve(n * (n + 1) / 2);
+
 	for (int i = 0;i < n;i++) cin >> nlist[i];
 	for (int i = 0;i < n;i++) {
 		int sum = 0;
@@ -29,6 +31,8 @@ int main() {
 	sort(nsum.begin(), nsum.end());
 
 	cin >> m;
+	msum.reserve(m * (m + 1) / 2);
+
 	for (int i = 0;i < m;i++) cin >> mlist[i];
 	for (int i = 0;i < m;i++) {
 		int sum = 0;
@@ -40,13 +44,15 @@ int main() {
 	sort(msum.begin(), msum.end());
 
 	int nidx = 0, midx = msum.size() - 1;
+	int nsize = nsum.size();
 
-	while (nidx < nsum.size() && midx >= 0) {
+	while (nidx < nsize && midx >= 0) {
 		int temp = nsum[nidx] + msum[midx];
 		if (temp == t) {
 			int ncnt = 0, mcnt = 0;
 			int nval = nsum[nidx], mval = msum[midx];
-			while (nidx < nsum.size() && nsum[nidx] == nval) {
+			
+			while (nidx < nsize && nsum[nidx] == nval) {
 				ncnt++;
 				nidx++;
 			}
