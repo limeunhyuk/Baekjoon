@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cmath>
+#include <algorithm>
 using namespace std;
 
 int cost(int start, int end) {
@@ -19,14 +21,11 @@ int main() {
 
 	int n;
 	cin >> n;
-	for (int i = 0;i < 5;i++) {
-		dp[0][i] = MAX;
-		dp[1][i] = MAX;
-	}
+	fill(dp[0], dp[0] + 10, MAX);
 	dp[0][0] = 0;
 
 	while (n) {
-		for (int i = 0;i < 5;i++) dp[!flip][i] = MAX;
+		fill(dp[!flip], dp[!flip] + 5, MAX);
 
 		for (int i = 0;i < 5;i++) {
 			if (dp[flip][i] == MAX) continue;
