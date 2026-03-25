@@ -29,24 +29,13 @@ int main() {
 		}
 	}
 
-	sort(arr_plus1.begin(), arr_plus1.end());
 	sort(arr_plus2.begin(), arr_plus2.end());
 
-	int idx1 = 0, idx2 = n * n - 1;
 	long long int ans = 0;
-	while (idx1 < n * n && idx2 >= 0) {
-		int temp = arr_plus1[idx1] + arr_plus2[idx2];
-		if (temp == 0) {
-			int cnt1 = 0, cnt2 = 0;
-			int val1 = arr_plus1[idx1], val2 = arr_plus2[idx2];
-			while (idx1 < n * n && arr_plus1[idx1] == val1) { cnt1++; idx1++; }
-			while (idx2 >= 0 && arr_plus2[idx2] == val2) { cnt2++; idx2--; }
-			ans += (long long int) cnt1 * cnt2;
-		}
-		else {
-			if (temp > 0) idx2--;
-			else idx1++;
-		}
+	for (int val: arr_plus1) {
+		int temp = -val;
+		int cnt = upper_bound(arr_plus2.begin(), arr_plus2.end(), temp) - lower_bound(arr_plus2.begin(), arr_plus2.end(), temp);
+		ans += cnt;
 	}
 	cout << ans;
 
