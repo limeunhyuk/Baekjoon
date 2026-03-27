@@ -4,8 +4,7 @@ using namespace std;
 
 const int MAX = 1e5 + 10;
 int g, p;
-int i;
-int maxGate[MAX];
+int maxGate;
 int parent[MAX];
 
 int find(int x) {
@@ -13,28 +12,23 @@ int find(int x) {
 	return parent[x] = find(parent[x]);
 }
 
-void unio(int a, int b) {
-	int x = find(a);
-	int y = find(b);
-	parent[x] = y;
-}
-
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 
 	cin >> g >> p;
+	for (int i = 1;i <= g;i++) parent[i] = i;
 
-	for (i = 0;i < p;i++) cin >> maxGate[i];
-	for (i = 1;i <= g;i++) parent[i] = i;
-
-	for (i = 0;i < p;i++) {
-		int curGate = find(maxGate[i]);
+	int ans = 0;
+	for (int i = 0;i < p;i++) {
+		cin >> maxGate;
+		int curGate = find(maxGate);
 		if (curGate == 0) break;
-		unio(curGate, curGate - 1);
+		parent[curGate] = find(curGate - 1);
+		ans++;
 	}
 
-	cout << i;
+	cout << ans;
 
 	return 0;
 }
