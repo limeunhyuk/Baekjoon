@@ -1,5 +1,5 @@
 #include <iostream>
-#include <algorithm>
+#include <cstring>
 using namespace std;
 
 const int MAX = 1024;
@@ -19,35 +19,29 @@ int main() {
 	cin.tie(NULL);
 
 	cin >> n;
-	for (int j = 1;j < 10;j++) dp[cur][j][addbit(0, j)] = 1;
+	for (int j = 1;j < 10;j++) dp[cur][j][1 << j] = 1;
 
 	for (int i = 2;i <= n;i++) {
 		for (int j = 0;j < 10;j++) {
 			for (int k = 0;k < MAX;k++) {
+				if (!dp[cur][j][k]) continue;
 				if (j - 1 >= 0) {
-					dp[!cur][j - 1][addbit(k, j - 1)] += dp[cur][j][k];
-					dp[!cur][j - 1][addbit(k, j - 1)] %= MAX2;
+					dp[!cur][j - 1][k | (1 << (j - 1))] += dp[cur][j][k] % MAX2;
 				}
 				if (j + 1 < 10) {
-					dp[!cur][j + 1][addbit(k, j + 1)] += dp[cur][j][k];
-					dp[!cur][j + 1][addbit(k, j + 1)] %= MAX2;
+					dp[!cur][j + 1][k | (1 << (j + 1))] += dp[cur][j][k] % MAX2;
 				}
 			}
 		}
-		for (int j = 0;j < 10;j++) {
-			for (int k = 0;k < MAX;k++) {
-				dp[cur][j][k] = 0;
-			}
-		}
+		memset(dp[cur], 0, sizeof(dp[cur]));
 		cur = !cur;
 	}
 
 	long long ans = 0;
 	for (int i = 0;i < 10;i++) {
-		ans += dp[cur][i][MAX - 1];
-		ans %= MAX2;
+		ans += dp[cur][i][MAX - 1] % MAX2;
 	}
-	cout << ans;
+	cout << ans % MAX2;
 
 	return 0;
 }
