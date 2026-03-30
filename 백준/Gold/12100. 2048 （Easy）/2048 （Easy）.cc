@@ -4,8 +4,7 @@ using namespace std;
 
 int n;
 
-struct board
-{
+struct board {
 	int map[20][20];
 };
 
@@ -30,8 +29,8 @@ board moveup(board Board) {
 					num1 = num2;
 				}
 			}
-			ans.map[pnt][j] = num1;
 		}
+		if (num1) ans.map[pnt][j] = num1;
 	}
 	return ans;
 }
@@ -47,13 +46,10 @@ board rotate(board Board) {
 
 void move(int cnt, board Board) {
 	if (cnt == 5) return;	
-	move(cnt + 1, moveup(Board));
-	Board = rotate(Board);
-	move(cnt + 1, moveup(Board));
-	Board = rotate(Board);
-	move(cnt + 1, moveup(Board));
-	Board = rotate(Board);
-	move(cnt + 1, moveup(Board));
+	for (int i = 0;i < 4;i++) {
+		move(cnt + 1, moveup(Board));
+		Board = rotate(Board);
+	}
 }
 
 int main() {
