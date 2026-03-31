@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstring>
-#include <set>
+#include <queue>
 using namespace std;
 
 const int MAX = 1010;
@@ -8,21 +8,32 @@ int n, m;
 bool map[MAX][MAX];
 int visited[MAX][MAX];
 int groupSize[MAX * MAX];
-int idx, cnt;
 
 int dx[4] = { 1,-1,0,0 };
 int dy[4] = { 0,0,1,-1 };
 
-void dfs(int x, int y) {
-	for (int i = 0;i < 4;i++) {
-		int nx = x + dx[i];
-		int ny = y + dy[i];
-		if (map[nx][ny] && !visited[nx][ny]) {
-			cnt++;
-			visited[nx][ny] = idx;
-			dfs(nx, ny);
+void bfs(int x, int y, int idx) {
+	queue<pair<int, int>> q;
+	q.push({ x,y });
+	visited[x][y] = idx;
+
+	int cnt = 0;
+	while (!q.empty()) {
+		x = q.front().first;
+		y = q.front().second;
+		q.pop();
+		cnt++;
+
+		for (int i = 0;i < 4;i++) {
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+			if (map[nx][ny] && !visited[nx][ny]) {
+				visited[nx][ny] = idx;
+				q.push({ nx,ny });
+			}
 		}
 	}
+	groupSize[idx] = cnt;
 }
 
 int main() {
@@ -40,14 +51,11 @@ int main() {
 		}
 	}
 
-	idx = 1;
+	int idx = 1;
 	for (int i = 1;i <= n;i++) {
 		for (int j = 1;j <= m;j++) {
 			if (map[i][j] && !visited[i][j]) {
-				cnt = 1;
-				visited[i][j] = idx;
-				dfs(i, j);
-				groupSize[idx] = cnt;
+				bfs(i, j, idx);
 				idx++;
 			}
 		}
@@ -60,13 +68,27 @@ int main() {
 			}
 			else {
 				int ans = 1;
-				set<int> s;
+				int groups[4];
+				int cnt = 0;
+
 				for (int k = 0;k < 4;k++) {
 					int nx = i + dx[k];
 					int ny = j + dy[k];
-					if (map[nx][ny]) s.insert(visited[nx][ny]);
+					if (map[nx][ny]) {
+						int id = visited[nx][ny];
+						bool check = true;
+						for (int p = 0;p < cnt;p++) {
+							if (groups[p] == id) {
+								check = false;
+								break;
+							}
+						}
+						if (check) {
+							groups[cnt++] = id;
+							ans += groupSize[id];
+						}
+					}
 				}
-				for (int temp : s) ans += groupSize[temp];
 				cout << ans % 10;
 			}
 		}
