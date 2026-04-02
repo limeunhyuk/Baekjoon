@@ -4,7 +4,6 @@
 using namespace std;
 
 const int MAX = 2510;
-char arr[MAX];
 bool isPal[MAX][MAX];
 int minPal[MAX];
 
@@ -15,20 +14,17 @@ int main() {
 	string s;
 	cin >> s;
 	int len = s.length();
-	for (int i = 0;i < len;i++) arr[i + 1] = s[i];
+	s = " " + s;
 
-	// 팰린드롬 여부 저장
 	for (int j = 1;j <= len;j++) isPal[j][j] = 1;
-	for (int j = 1;j < len;j++) if (arr[j] == arr[j + 1]) isPal[j][j + 1] = 1;
+	for (int j = 1;j < len;j++) if (s[j] == s[j + 1]) isPal[j][j + 1] = 1;
 	for (int i = 2;i < len;i++) {
 		for (int j = 1;j <= len - i;j++) {
-			if (arr[j] == arr[j + i] && isPal[j + 1][j + i - 1]) isPal[j][j + i] = 1;
+			if (s[j] == s[j + i] && isPal[j + 1][j + i - 1]) isPal[j][j + i] = 1;
 		}
 	}
 	
-	minPal[1] = 1;
-	for (int i = 2;i <= len;i++) {
-		char c = s[i];
+	for (int i = 1;i <= len;i++) {
 		minPal[i] = minPal[i - 1] + 1;
 		for (int j = 1;j < i;j++) {
 			if (isPal[j][i]) minPal[i] = min(minPal[i], minPal[j - 1] + 1);
