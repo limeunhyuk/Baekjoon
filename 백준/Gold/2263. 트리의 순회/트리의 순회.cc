@@ -10,9 +10,6 @@ int postorder[MAX];
 
 void dfs(int in_s, int in_e, int post_s, int post_e) {
 	if (in_s > in_e) return;
-	if (in_s == in_e) {
-		cout << inorder[in_s] << " "; return;
-	}
 	int idx = loca[postorder[post_e]];
 	cout << postorder[post_e] << " ";
 	dfs(in_s, idx - 1, post_s, post_s + idx - 1 - in_s);
