@@ -31,7 +31,7 @@ int main() {
 		cin >> temp;
 		int idx = find(upper_bound(card, card + m, temp) - card);
 		cout << card[idx] << "\n";
-		parent[idx] = idx + 1;
+		parent[idx] = find(idx + 1);
 	}
 
 	return 0;
