@@ -1,85 +1,98 @@
 #include <iostream>
 #include <cstring>
-#include <algorithm>
+
 using namespace std;
 
-const int lenMAX = 110, arrMAX = 10010;
-int r, c, m;
-int shark[arrMAX][6];
-int sharkloca[lenMAX][lenMAX];
-long long ans;
+const int MAX = 105;
+int R, C, M;
 
-int dx[5] = { 0,-1,1,0,0 };
-int dy[5] = { 0,0,0,1,-1 };
+struct Shark {
+    int r, c, speed, dir, size;
+    bool dead;
+};
+
+Shark sharks[10010];
+int map[MAX][MAX];
+long long ans = 0;
+
+int dx[] = { 0, -1, 1, 0, 0 };
+int dy[] = { 0, 0, 0, 1, -1 };
+
+inline int turn(int d) {
+    if (d == 1) return 2;
+    if (d == 2) return 1;
+    if (d == 3) return 4;
+    return 3;
+}
 
 int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
-	cin >> r >> c >> m;
+    cin >> R >> C >> M;
+    for (int i = 1; i <= M; i++) {
+        cin >> sharks[i].r >> sharks[i].c >> sharks[i].speed >> sharks[i].dir >> sharks[i].size;
+        sharks[i].dead = false;
+        map[sharks[i].r][sharks[i].c] = i;
+    }
 
-	for (int i = 1;i <= m;i++) {
-		for (int j = 0;j < 5;j++) {
-			cin >> shark[i][j];
-		}
-		sharkloca[shark[i][0]][shark[i][1]] = i;
-	}
+    for (int col = 1; col <= C; col++) {
+        for (int row = 1; row <= R; row++) {
+            if (map[row][col]) {
+                int idx = map[row][col];
+                ans += sharks[idx].size;
+                sharks[idx].dead = true;
+                break;
+            }
+        }
 
-	for (int i = 1;i <= c;i++) {
-		for (int j = 1;j <= r;j++) {
-			int temp = sharkloca[j][i];
-			if (temp && !shark[temp][5]) {
-				ans += shark[temp][4];
-				shark[temp][5] = 1;
-				break;
-			}
-		}
+        memset(map, 0, sizeof(map));
 
-		memset(sharkloca, 0, sizeof(sharkloca));
+        for (int i = 1; i <= M; i++) {
+            if (sharks[i].dead) continue;
 
-		for (int j = 1;j <= m;j++) {
-			if (!shark[j][5]) {
-				if (shark[j][3] < 3) {
-					int move_x = (shark[j][2]) % (2 * r - 2);
-					while (move_x--) {
-						shark[j][0] += dx[shark[j][3]];
-						if (shark[j][0] == 0) {
-							shark[j][0] = 2;
-							shark[j][3] += 2 * (shark[j][3] % 2) - 1;
-						}
-						else if (shark[j][0] == r + 1) {
-							shark[j][0] = r - 1;
-							shark[j][3] += 2 * (shark[j][3] % 2) - 1;
-						}
-					}
-				}
-				else {
-					int move_y = (shark[j][2]) % (2 * c - 2);
-					while (move_y--) {
-						shark[j][1] += dy[shark[j][3]];
-						if (shark[j][1] == 0) {
-							shark[j][1] = 2;
-							shark[j][3] += 2 * (shark[j][3] % 2) - 1;
-						}
-						else if (shark[j][1] == c + 1) {
-							shark[j][1] = c - 1;
-							shark[j][3] += 2 * (shark[j][3] % 2) - 1;
-						}
-					}
-				}
-				int new_x = shark[j][0];
-				int new_y = shark[j][1];
-				int idx = sharkloca[new_x][new_y];
-				if (idx && shark[idx][4] > shark[j][4]) shark[j][5] = 1;
-				else {
-					shark[idx][5] = 1;
-					sharkloca[new_x][new_y] = j;
-				}
-			}
-		}
-	}
+            int speed = sharks[i].speed;
+            int dir = sharks[i].dir;
+            int r = sharks[i].r;
+            int c = sharks[i].c;
 
-	cout << ans;
+            if (dir == 1 || dir == 2) {
+                int move = speed % ((R - 1) * 2);
+                while (move--) {
+                    r += dx[dir];
+                    if (r < 1) { r = 2; dir = turn(dir); }
+                    else if (r > R) { r = R - 1; dir = turn(dir); }
+                }
+            }
+            else {
+                int move = speed % ((C - 1) * 2);
+                while (move--) {
+                    c += dy[dir];
+                    if (c < 1) { c = 2; dir = turn(dir); }
+                    else if (c > C) { c = C - 1; dir = turn(dir); }
+                }
+            }
 
-	return 0;
+            sharks[i].r = r;
+            sharks[i].c = c;
+            sharks[i].dir = dir;
+
+            if (map[r][c]) {
+                int target = map[r][c];
+                if (sharks[target].size < sharks[i].size) {
+                    sharks[target].dead = true;
+                    map[r][c] = i;
+                }
+                else {
+                    sharks[i].dead = true;
+                }
+            }
+            else {
+                map[r][c] = i;
+            }
+        }
+    }
+
+    cout << ans;
+    return 0;
 }
