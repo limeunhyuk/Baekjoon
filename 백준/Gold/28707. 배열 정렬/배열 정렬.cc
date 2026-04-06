@@ -5,24 +5,26 @@
 #include <algorithm>
 using namespace std;
 
-typedef pair<int, vector<int>> Arr;
-typedef tuple<int, int, int> Arr2;
+using State = pair<int, vector<int>>;
+
+struct swapCmd {
+    int l, r, c;
+};
 
 int N, M;
 vector<int> arr;
 map<vector<int>, int> m;
-vector<Arr2> sw;
-priority_queue<Arr, vector<Arr>, greater<Arr>> pq;
+vector<swapCmd> sw;
+priority_queue<State, vector<State>, greater<State>> pq;
 
 int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
     cin >> N;
+    arr.resize(N);
     for (int i = 0;i < N;i++) {
-        int temp;
-        cin >> temp;
-        arr.push_back(temp);
+        cin >> arr[i];
     }
 
     cin >> M;
@@ -34,22 +36,20 @@ int main() {
 
     pq.push({ 0,arr });
     m[arr] = 0;
+
     while (!pq.empty()) {
-        auto temp = pq.top();
-        int cost = temp.first;
-        vector<int> curarr = temp.second;
+        auto [cost, curarr] = pq.top();
         pq.pop();
 
-        for (Arr2 curfunc : sw) {
-            int l = get<0>(curfunc);
-            int r = get<1>(curfunc);
-            int c = get<2>(curfunc);
-            swap(curarr[l - 1], curarr[r - 1]);
-            if (m.find(curarr) == m.end() || m[curarr] > cost + c) {
-                m[curarr] = cost + c;
-                pq.push({ cost + c, curarr });
+        if (m[curarr] < cost) continue;
+
+        for (swapCmd cmd : sw) {
+            swap(curarr[cmd.l - 1], curarr[cmd.r - 1]);
+            if (m.find(curarr) == m.end() || m[curarr] > cost + cmd.c) {
+                m[curarr] = cost + cmd.c;
+                pq.push({ cost + cmd.c, curarr });
             }
-            swap(curarr[l - 1], curarr[r - 1]);
+            swap(curarr[cmd.l - 1], curarr[cmd.r - 1]);
         }
     }
 
