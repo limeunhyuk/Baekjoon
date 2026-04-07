@@ -3,18 +3,20 @@
 using namespace std;
 
 int n;
-bool map[11][11];
+bool board[11][11];
 bool neg[20];
 int ans[2];
 
 void dfs(int pos, int num, bool odd) {
+    if (num + (2 * n - pos) / 2 <= ans[odd]) return;
+
     if (pos > 2 * n - 2) {
         if (ans[odd] < num) ans[odd] = num;
         return;
     }
     for (int i = max(0, pos - n + 1);i <= min(pos, n - 1);i++) {
         int j = pos - i;
-        if (map[i][j] && !neg[i - j + n]) {
+        if (board[i][j] && !neg[i - j + n]) {
             neg[i - j + n] = 1;
             dfs(pos + 2, num + 1, odd);
             neg[i - j + n] = 0;
@@ -30,7 +32,7 @@ int main() {
     cin >> n;
     for (int i = 0;i < n;i++) {
         for (int j = 0;j < n;j++) {
-            cin >> map[i][j];
+            cin >> board[i][j];
         }
     }
 
