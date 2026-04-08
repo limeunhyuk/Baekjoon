@@ -22,8 +22,8 @@ void unio(int a, int b) {
 }
 
 int ccw(Deca a, Deca b, Deca c) {
-    long long temp = a.first * b.second + b.first * c.second + c.first * a.second;
-    temp -= a.second * b.first + b.second * c.first + c.second * a.first;
+    long long temp = 1LL * a.first * b.second + 1LL * b.first * c.second + 1LL * c.first * a.second;
+    temp -= 1LL * a.second * b.first + 1LL * b.second * c.first + 1LL * c.second * a.first;
     if (temp > 0) return 1;
     else if (temp < 0) return -1;
     else return 0;
