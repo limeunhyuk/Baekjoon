@@ -20,7 +20,7 @@ int main() {
         int a, b;
         cin >> a >> b;
         // A 기준으로 출력하기 위해 바꿔서 넣는다.
-        v.push_back({ b,a });
+        v.emplace_back(b, a);
         if (max_num < a) max_num = a;
         check[a] = 1;
     }
