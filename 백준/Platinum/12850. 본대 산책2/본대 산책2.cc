@@ -3,7 +3,7 @@
 #include <algorithm>
 using namespace std;
 
-const long long MAX = 1000000007;
+const long long MOD = 1000000007;
 long long D;
 
 struct Matrix {
@@ -16,7 +16,7 @@ struct Matrix {
         for (int i = 0;i < 8;i++) {
             for (int j = 0;j < 8;j++) {
                 for (int k = 0;k < 8;k++) {
-                    A.v[i][j] = (A.v[i][j] + v[i][k] * B.v[k][j]) % MAX;
+                    A.v[i][j] = (A.v[i][j] + v[i][k] * B.v[k][j]) % MOD;
                 }
             }
         }
@@ -24,7 +24,7 @@ struct Matrix {
     }
 };
 
-Matrix matmul(Matrix a, int d) {
+Matrix matmul(Matrix a, long long d) {
     Matrix ans;
     for (int i = 0;i < 8;i++) ans.v[i][i] = 1;
 
