@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <stack>
+#include <cctype>
 #include <algorithm>
 using namespace std;
 
@@ -19,7 +20,7 @@ int main() {
 
     stack<char> st;
     for (char c : s) {
-        if ('A' <= c && c <= 'Z') cout << c;
+        if (isupper(c)) cout << c;
         else if (c == ')') {
             while (st.top() != '(') {
                 cout << st.top();
@@ -28,10 +29,8 @@ int main() {
             st.pop();
         }
         else {                
-            while (!st.empty()) {
-                char t = st.top();
-                if (c == '(' || prior(t) < prior(c)) break;
-                cout << t;
+            while (!st.empty() && c!= '(' && prior(st.top()) >= prior(c)) {
+                cout << st.top();
                 st.pop();
             }
             st.push(c);
